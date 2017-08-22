@@ -106,11 +106,17 @@ bool DaemonUtility::ValidateConfigFiles(const std::vector<std::string>& configs,
 
 	if (!configs.empty()) {
 		for (const String& configPath : configs) {
-			Expression *expression = ConfigCompiler::CompileFile(configPath, String(), "_etc");
-			success = ExecuteExpression(expression);
-			delete expression;
-			if (!success)
-				return false;
+			try {
+				Expression *expression = ConfigCompiler::CompileFile(configPath, String(), "_etc");
+				success = ExecuteExpression(expression);
+				delete expression;
+				if (!success)
+					return false;
+			} catch (const std::exception& e) {
+				Log(LogCritical, "cli", DiagnosticInformation(e, false));
+				Log(LogCritical, "cli", "Could not compile config files. Exiting...");
+				Application::Exit(1);
+			}
 		}
 	}
 
@@ -178,7 +184,14 @@ bool DaemonUtility::LoadConfigFiles(const std::vector<std::string>& configs,
 	}
 
 	ConfigCompilerContext::GetInstance()->FinishObjectsFile();
-	ScriptGlobal::WriteToFile(varsfile);
+
+	try {
+		ScriptGlobal::WriteToFile(varsfile);
+	} catch (const std::exception& e) {
+		Log(LogCritical, "cli", DiagnosticInformation(e, false));
+		Log(LogCritical, "cli", "Could not write vars file. Exiting...");
+		Application::Exit(1);
+	}
 
 	return true;
 }
