@@ -422,7 +422,7 @@ wizard_ticket:
 			fp << "  bind_port = " << bind_port << "\n";
 
 		fp << "\n"
-		    << "  ticket_salt = TicketSalt\n"
+		    << "  client_ticket = ClientTicket\n"
 		    << "}\n";
 
 		fp.close();
@@ -457,6 +457,8 @@ wizard_ticket:
 
 		NodeUtility::UpdateConstant("NodeName", cn);
 		NodeUtility::UpdateConstant("ZoneName", cn);
+
+		NodeUtility::UpdateConstant("ClientTicket", ticket);
 	} else {
 		/* master setup */
 		std::cout << ConsoleColorTag(Console_Bold) << "Starting the Master setup routine...\n";

@@ -406,7 +406,7 @@ int NodeSetupCommand::SetupNode(const boost::program_options::variables_map& vm,
 		fp << "  accept_commands = false\n";
 
 	fp << "\n"
-	    << "  ticket_salt = TicketSalt\n"
+	    << "  client_ticket = ClientTicket\n"
 	    << "}\n";
 
 	fp.close();
@@ -440,6 +440,8 @@ int NodeSetupCommand::SetupNode(const boost::program_options::variables_map& vm,
 
 	NodeUtility::UpdateConstant("NodeName", cn);
 	NodeUtility::UpdateConstant("ZoneName", vm["zone"].as<std::string>());
+
+	NodeUtility::UpdateConstant("ClientTicket", ticket);
 
 	/* tell the user to reload icinga2 */
 

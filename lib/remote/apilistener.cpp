@@ -546,6 +546,7 @@ void ApiListener::SendCertificateRequest(const JsonRpcConnection::Ptr& aclient)
 	message->Set("method", "pki::RequestCertificate");
 
 	Dictionary::Ptr params = new Dictionary();
+	params->Set("ticket", GetClientTicket());
 
 	message->Set("params", params);
 
